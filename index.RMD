@@ -23,6 +23,11 @@ My Shiny app uses the IRIS dataset and RPART Machine Learning algorithm from the
 4. Step 4: Calculate the in-sample & out-of-sample error rate
 5. Step 5: Pass the calculated values from Server.R to UI.R to display on the UI
 
+**Code Links below:**
+[Github: UI.R](https://github.com/PuneetSingla5822/MyShinyApp/blob/gh-pages/Assignment4/ui.R),
+[Github: Server.R](https://github.com/PuneetSingla5822/MyShinyApp/blob/gh-pages/Assignment4/server.R),
+[Github: R Markdown](https://github.com/PuneetSingla5822/MyShinyApp/blob/gh-pages/index.RMD)
+
 ## Code Demo: Server Calculation (1/2)
 
 ```{r message=FALSE, echo=FALSE}
