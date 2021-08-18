@@ -7,7 +7,7 @@ output: slidy_presentation
 
 ## How to use this application?
 
-My Shiny app is running a simple Machine Learning model based on the user specified list of predictors
+My Shiny app allows its users to pick the predictors from the IRIS dataset, build a Machine Learning model, and evaluate its accuracy in three simple steps:
 
 1. Step 1: Select the predictors of your choice
 2. Step 2: Click Submit
@@ -15,27 +15,30 @@ My Shiny app is running a simple Machine Learning model based on the user specif
 
 ## How does this application work?
 
-This application is using the IRIS dataset and creating a RPART Machine Learning model using the Train function from CARET package.
+My Shiny app uses the IRIS dataset and RPART Machine Learning algorithm from the CARET package to build classification and regression trees. The following steps are involved:
 
-1. Step 1: Based on user selection of predictors, create a subset of IRIS dataset
+1. Step 1: Based on user selection of predictors, first create a subset of the IRIS dataset limited to selected predictors.
 2. Step 2: Divide the IRIS data into Training (60%) & Test datasets (40%)
-3. Step 3: Train the Machine Learning model using Training dataset & plot the results
-4. Step 4: Calculate the in-Sample & Out-of-Sample error rate
+3. Step 3: Train the Machine Learning model using the training dataset & plot the results
+4. Step 4: Calculate the in-sample & out-of-sample error rate
 5. Step 5: Pass the calculated values from Server.R to UI.R to display on the UI
 
-## Server Calculation (1/2)
+## Code Demo: Server Calculation (1/2)
 
 ```{r message=FALSE, echo=FALSE}
 library(shiny)
 library(caret)
 library(rattle)
+library(e1071)
 set.seed(123)
 ```
 
-Assuming a user selected only Petal Length to predict the Species. Server.R code will calculate IRIS data subset to have only Petal Length and Species column
+Let's assume that a user only selected Petal Length to predict the Species of the flower. In the below code chunk, Server. R will create a subset of the IRIS dataset and divide it into training and test datasets.
 
 ```{r echo=TRUE}
 iris <- iris[,c(3,5)]     #Petal Length is at position 3 and Species is at position 5
+
+## Create Training & Test datasets
 ml_inTrain <- createDataPartition(iris$Species, p = 0.6)[[1]]
 ml_train <- iris[ml_inTrain,]
 ml_test <- iris[-ml_inTrain,]
@@ -44,14 +47,16 @@ dim(ml_test)
 ```
 
 
-## Server Calculation (2/2)
+## Code Demo: Server Calculation (2/2)
 
-Assuming a user selected only Petal Length to predict the Species.
-Server.R code will calculate IRIS data subset to have only Petal Length and Species column
+Next, Server. R will create the Machine Learning model using the classification and regression trees method, plot the results, and calculate the in-sample and out-of-sample error rates.
 
 ```{r echo=TRUE}
+## Create & Plot the model
 ml_mdl <- train(Species ~ ., data = ml_train, method = "rpart")
 fancyRpartPlot(ml_mdl$finalModel)
-paste(round((1-confusionMatrix(ml_train$Species,predict(ml_mdl,ml_train))$overall[1])*100,2), "%", sep="")
-paste(round((1-confusionMatrix(ml_test$Species,predict(ml_mdl,ml_test))$overall[1])*100,2), "%", sep="")
 ```
+
+In-sample error rate: `r paste(round((1-confusionMatrix(ml_train$Species,predict(ml_mdl,ml_train))$overall[1])*100,2), "%", sep="")`
+
+Out-of-sample error rate: `r paste(round((1-confusionMatrix(ml_test$Species,predict(ml_mdl,ml_test))$overall[1])*100,2), "%", sep="")`

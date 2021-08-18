@@ -4,7 +4,6 @@ library(shiny)
 library(caret)
 library(rattle)
 library(e1071)
-set.seed(123)
 
 # Define server logic required to select the user specified predictors in the data & create a Machine Learning model
 # that uses those predictors to predict the Species of flowers.
@@ -13,6 +12,7 @@ shinyServer(function(input, output) {
     
     # Calculate the IRIS data subset and create Machine Learning Model
     ml_out <- reactive({
+        set.seed(123)
         
         if(input$SepalLen+input$Sepalwid+input$PetalLen+input$Petalwid == 0) {
             return(NULL)
